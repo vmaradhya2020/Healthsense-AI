@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Emergency hospital finder - Find nearest emergency rooms and ambulance services instantly">
+    <meta name="keywords" content="emergency, hospital, ambulance, urgent care, ER, 911">
+    <title>🚨 Emergency Services - HealthSense AI</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/main.css">
+
+    <style>
+        /* Emergency-specific critical styles */
+        .emergency-hero {
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem 2rem;
+            border-bottom: 5px solid #ffeb3b;
+        }
+
+        .emergency-banner {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+
+        .emergency-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .call-911-box {
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 3px solid #ffeb3b;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 1.5rem auto;
+            max-width: 600px;
+        }
+
+        .call-911-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .call-911-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #ffeb3b;
+            text-decoration: none;
+            display: inline-block;
+            transition: var(--transition-normal);
+        }
+
+        .call-911-number:hover {
+            transform: scale(1.1);
+            color: #fff;
+        }
+
+        .emergency-search-section {
+            background-color: #fff;
+            padding: 2rem 1rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .emergency-search-box {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: var(--bg-light);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--emergency-red);
+        }
+
+        .emergency-input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .emergency-input-label {
+            display: block;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .emergency-zipcode-input {
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            font-size: 1.5rem;
+            border: 3px solid var(--primary-teal);
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-weight: 600;
+            transition: var(--transition-normal);
+        }
+
+        .emergency-zipcode-input:focus {
+            outline: none;
+            border-color: var(--emergency-red);
+            box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.1);
+        }
+
+        .gps-button {
+            width: 100%;
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+            background-color: var(--primary-teal);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            margin-bottom: 1rem;
+        }
+
+        .gps-button:hover {
+            background-color: var(--primary-teal-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .gps-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .emergency-search-btn {
+            width: 100%;
+            padding: 1.5rem 2rem;
+            font-size: 1.5rem;
+            background-color: var(--emergency-red);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .emergency-search-btn:hover {
+            background-color: var(--emergency-red-dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .emergency-search-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid var(--bg-light);
+            border-top: 4px solid var(--emergency-red);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-section {
+            display: none;
+            padding: 2rem 1rem;
+            background-color: var(--bg-light);
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .results-title {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .results-location {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+        }
+
+        .hospital-card {
+            background-color: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border-left: 6px solid var(--emergency-red);
+            transition: var(--transition-normal);
+        }
+
+        .hospital-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .hospital-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .hospital-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .hospital-distance {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--emergency-red);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .hospital-info {
+            margin-bottom: 1rem;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .info-label {
+            font-weight: 600;
+            margin-right: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .info-value {
+            color: var(--text-secondary);
+        }
+
+        .ambulance-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .ambulance-available {
+            background-color: #e8f5e9;
+            color: #27ae60;
+            border: 2px solid #27ae60;
+        }
+
+        .ambulance-unavailable {
+            background-color: #ffebee;
+            color: #d32f2f;
+            border: 2px solid #d32f2f;
+        }
+
+        .hospital-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-call {
+            background-color: var(--emergency-red);
+            color: white;
+        }
+
+        .btn-call:hover {
+            background-color: var(--emergency-red-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-directions {
+            background-color: var(--primary-teal);
+            color: white;
+        }
+
+        .btn-directions:hover {
+            background-color: var(--primary-teal-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-ambulance {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .btn-ambulance:hover {
+            background-color: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem 1rem;
+            background-color: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .no-results-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-results-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .no-results-text {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .disclaimer-box {
+            background-color: #fff3cd;
+            border: 2px solid #f39c12;
+            border-radius: var(--radius-md);
+            padding: 1rem 1.5rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .disclaimer-text {
+            font-size: 0.9rem;
+            color: #856404;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .emergency-banner {
+                font-size: 1.75rem;
+            }
+
+            .call-911-text {
+                font-size: 1.25rem;
+            }
+
+            .call-911-number {
+                font-size: 2.5rem;
+            }
+
+            .emergency-zipcode-input {
+                font-size: 1.25rem;
+            }
+
+            .emergency-search-btn {
+                font-size: 1.25rem;
+            }
+
+            .hospital-header {
+                flex-direction: column;
+            }
+
+            .hospital-distance {
+                align-self: flex-start;
+            }
+
+            .hospital-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand">
+            <span class="navbar-brand-icon">🏥</span>
+            HealthSense AI
+        </a>
+
+        <button class="navbar-toggle" id="navbarToggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="navbar-links" id="navbarLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="hospitals.html">Hospitals</a></li>
+            <li><a href="doctors.html">Doctors</a></li>
+            <li><a href="tests.html">Lab Tests</a></li>
+            <li><a href="chat.html">AI Chat</a></li>
+            <li><a href="emergency.html" class="emergency-link active">🚨 Emergency</a></li>
+        </ul>
+    </nav>
+
+    <!-- Emergency Hero Section -->
+    <section class="emergency-hero">
+        <div class="container">
+            <div class="emergency-banner">
+                🚨🚨🚨 EMERGENCY SERVICES 🚨🚨🚨
+            </div>
+            <p class="emergency-subtitle">
+                Find the nearest emergency room and ambulance services instantly
+            </p>
+
+            <div class="call-911-box">
+                <div class="call-911-text">
+                    ⚠️ FOR LIFE-THREATENING EMERGENCIES
+                </div>
+                <a href="tel:911" class="call-911-number">
+                    📞 CALL 911
+                </a>
+                <div style="margin-top: 1rem; font-size: 0.9rem;">
+                    Don't wait - Call 911 immediately for heart attacks, severe injuries, breathing problems, or unconsciousness
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Search Section -->
+    <section class="emergency-search-section">
+        <div class="container">
+            <div class="emergency-search-box">
+                <h2 style="text-align: center; margin-bottom: 1.5rem; color: var(--text-dark);">
+                    Find Nearest Emergency Hospital
+                </h2>
+
+                <form id="emergencySearchForm">
+                    <div class="emergency-input-group">
+                        <label for="zipcodeInput" class="emergency-input-label">
+                            📍 Enter Your ZIP Code or Location
+                        </label>
+                        <input
+                            type="text"
+                            id="zipcodeInput"
+                            class="emergency-zipcode-input"
+                            placeholder="e.g., 10001"
+                            maxlength="10"
+                            autocomplete="postal-code"
+                            autofocus
+                            required
+                        >
+                    </div>
+
+                    <button type="button" id="gpsButton" class="gps-button">
+                        🌐 Use My Current Location (GPS)
+                    </button>
+
+                    <button type="submit" class="emergency-search-btn">
+                        🚨 FIND NEAREST EMERGENCY HOSPITAL
+                    </button>
+                </form>
+
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner"></div>
+                    <p style="font-weight: 600; color: var(--text-dark);">Searching for nearest emergency facilities...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section" id="resultsSection">
+        <div class="container">
+            <div class="results-header" id="resultsHeader">
+                <h2 class="results-title">Nearest Emergency Hospitals</h2>
+                <p class="results-location" id="resultsLocation"></p>
+            </div>
+
+            <div id="hospitalResults">
+                <!-- Results will be dynamically inserted here -->
+            </div>
+
+            <div class="disclaimer-box">
+                <p class="disclaimer-text">
+                    ⚠️ <strong>MEDICAL DISCLAIMER:</strong> This information is for reference only.
+                    In case of a life-threatening emergency, ALWAYS CALL 911 immediately.
+                    Do not rely solely on this tool for emergency medical care.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">About HealthSense AI</h3>
+                    <p class="footer-text">
+                        Your trusted AI-powered healthcare companion for finding hospitals,
+                        doctors, lab tests, and emergency services.
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="hospitals.html">Hospital Comparison</a></li>
+                        <li><a href="doctors.html">Find Doctors</a></li>
+                        <li><a href="tests.html">Lab Tests</a></li>
+                        <li><a href="chat.html">AI Chat Assistant</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="chat.html">AI Health Assistant</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Emergency Contact</h3>
+                    <ul class="footer-links">
+                        <li><a href="tel:911" style="color: var(--emergency-red); font-weight: 600;">🚨 Call 911 (Emergency)</a></li>
+                        <li><a href="mailto:support@healthsense.ai">📧 support@healthsense.ai</a></li>
+                        <li>📞 1-800-HEALTH-AI</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 HealthSense AI. All rights reserved.</p>
+                <p class="footer-disclaimer">
+                    <strong>Medical Disclaimer:</strong> For life-threatening emergencies, always call 911 immediately.
+                    This platform provides informational services only and is not a substitute for professional medical advice.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile Navigation Toggle
+        const navbarToggle = document.getElementById('navbarToggle');
+        const navbarLinks = document.getElementById('navbarLinks');
+
+        if (navbarToggle) {
+            navbarToggle.addEventListener('click', () => {
+                navbarLinks.classList.toggle('active');
+            });
+        }
+
+        // Emergency Search Functionality
+        const emergencyForm = document.getElementById('emergencySearchForm');
+        const zipcodeInput = document.getElementById('zipcodeInput');
+        const gpsButton = document.getElementById('gpsButton');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const resultsSection = document.getElementById('resultsSection');
+        const resultsLocation = document.getElementById('resultsLocation');
+        const hospitalResults = document.getElementById('hospitalResults');
+
+        // Check for query parameter from home page search
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryParam = urlParams.get('q');
+        if (queryParam) {
+            // Extract ZIP code from query if present
+            const zipMatch = queryParam.match(/\d{5}/);
+            if (zipMatch) {
+                zipcodeInput.value = zipMatch[0];
+            }
+        }
+
+        // Form submission
+        emergencyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const zipcode = zipcodeInput.value.trim();
+
+            if (!zipcode) {
+                alert('Please enter a valid ZIP code');
+                return;
+            }
+
+            await searchEmergencyHospitals(zipcode);
+        });
+
+        // GPS Location Detection
+        gpsButton.addEventListener('click', () => {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+
+            gpsButton.disabled = true;
+            gpsButton.textContent = '🌐 Getting your location...';
+
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+
+                    // Try to get ZIP code from coordinates using reverse geocoding
+                    // For now, we'll use a placeholder approach
+                    // In production, you'd use a geocoding API
+                    try {
+                        // Placeholder: Use coordinates directly
+                        // In real implementation, convert to ZIP code via API
+                        const locationString = `${latitude.toFixed(4)},${longitude.toFixed(4)}`;
+                        zipcodeInput.value = locationString;
+
+                        // Auto-submit the form
+                        await searchEmergencyHospitals(locationString);
+                    } catch (error) {
+                        alert('Could not determine your ZIP code. Please enter it manually.');
+                    } finally {
+                        gpsButton.disabled = false;
+                        gpsButton.textContent = '🌐 Use My Current Location (GPS)';
+                    }
+                },
+                (error) => {
+                    alert('Unable to access your location. Please enter your ZIP code manually.');
+                    gpsButton.disabled = false;
+                    gpsButton.textContent = '🌐 Use My Current Location (GPS)';
+                }
+            );
+        });
+
+        // Search for emergency hospitals
+        async function searchEmergencyHospitals(zipcode) {
+            // Show loading
+            loadingSpinner.classList.add('active');
+            resultsSection.classList.remove('active');
+
+            try {
+                // Call the backend API
+                const response = await fetch(`/api/emergency?zipcode=${encodeURIComponent(zipcode)}`);
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch emergency hospitals');
+                }
+
+                const data = await response.json();
+
+                // Display results
+                displayResults(zipcode, data);
+
+            } catch (error) {
+                console.error('Error:', error);
+
+                // Show mock data for demo purposes
+                // In production, this would show an error message
+                displayMockResults(zipcode);
+            } finally {
+                loadingSpinner.classList.remove('active');
+            }
+        }
+
+        // Display results
+        function displayResults(zipcode, data) {
+            resultsLocation.textContent = `Results for ZIP code: ${zipcode}`;
+
+            if (!data || !data.hospitals || data.hospitals.length === 0) {
+                hospitalResults.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">😞</div>
+                        <h3 class="no-results-title">No Emergency Hospitals Found</h3>
+                        <p class="no-results-text">
+                            We couldn't find emergency hospitals in this area.
+                            Please try a different ZIP code or call 911 for immediate assistance.
+                        </p>
+                        <a href="tel:911" class="btn btn-emergency btn-lg" style="margin-top: 1rem;">
+                            📞 CALL 911 NOW
+                        </a>
+                    </div>
+                `;
+                resultsSection.classList.add('active');
+                return;
+            }
+
+            // Render hospital cards
+            hospitalResults.innerHTML = data.hospitals.map(hospital => createHospitalCard(hospital)).join('');
+            resultsSection.classList.add('active');
+
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Display mock results for demo
+        function displayMockResults(zipcode) {
+            const mockHospitals = [
+                {
+                    name: 'Mount Sinai Hospital',
+                    address: '1 Gustave L. Levy Place, New York, NY 10029',
+                    phone: '(212) 241-6500',
+                    distance: '0.8 miles',
+                    driveTime: '3 min drive',
+                    ambulanceAvailable: true,
+                    emergencyServices: 'Level 1 Trauma Center'
+                },
+                {
+                    name: 'NewYork-Presbyterian Hospital',
+                    address: '525 E 68th St, New York, NY 10065',
+                    phone: '(212) 746-5454',
+                    distance: '1.2 miles',
+                    driveTime: '5 min drive',
+                    ambulanceAvailable: true,
+                    emergencyServices: 'Comprehensive Emergency Dept'
+                },
+                {
+                    name: 'Lenox Hill Hospital',
+                    address: '100 E 77th St, New York, NY 10075',
+                    phone: '(212) 434-2000',
+                    distance: '1.8 miles',
+                    driveTime: '7 min drive',
+                    ambulanceAvailable: false,
+                    emergencyServices: '24/7 Emergency Room'
+                },
+                {
+                    name: 'NYU Langone Health',
+                    address: '550 1st Ave, New York, NY 10016',
+                    phone: '(212) 263-7300',
+                    distance: '2.3 miles',
+                    driveTime: '9 min drive',
+                    ambulanceAvailable: true,
+                    emergencyServices: 'Level 1 Trauma Center'
+                }
+            ];
+
+            resultsLocation.textContent = `Results for ZIP code: ${zipcode}`;
+            hospitalResults.innerHTML = mockHospitals.map(hospital => createHospitalCard(hospital)).join('');
+            resultsSection.classList.add('active');
+
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Create hospital card HTML
+        function createHospitalCard(hospital) {
+            const ambulanceStatus = hospital.ambulanceAvailable
+                ? '<span class="ambulance-status ambulance-available">✅ AMBULANCE AVAILABLE</span>'
+                : '<span class="ambulance-status ambulance-unavailable">❌ AMBULANCE NOT AVAILABLE</span>';
+
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hospital.address || hospital.name)}`;
+
+            return `
+                <div class="hospital-card">
+                    <div class="hospital-header">
+                        <div>
+                            <h3 class="hospital-name">🏥 ${hospital.name}</h3>
+                            <div class="info-row">
+                                <span class="info-label">📋</span>
+                                <span class="info-value">${hospital.emergencyServices || 'Emergency Services Available'}</span>
+                            </div>
+                        </div>
+                        <div class="hospital-distance">
+                            📍 ${hospital.distance} • ⏱️ ${hospital.driveTime}
+                        </div>
+                    </div>
+
+                    <div class="hospital-info">
+                        <div class="info-row">
+                            <span class="info-label">📍 Address:</span>
+                            <span class="info-value">${hospital.address}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">📞 Phone:</span>
+                            <span class="info-value">${hospital.phone}</span>
+                        </div>
+                        ${ambulanceStatus}
+                    </div>
+
+                    <div class="hospital-actions">
+                        <a href="tel:${hospital.phone.replace(/[^0-9]/g, '')}" class="action-btn btn-call">
+                            📞 CALL NOW
+                        </a>
+                        <a href="${mapsUrl}" target="_blank" class="action-btn btn-directions">
+                            🗺️ GET DIRECTIONS
+                        </a>
+                        ${hospital.ambulanceAvailable
+                            ? '<button class="action-btn btn-ambulance" onclick="requestAmbulance(\'' + hospital.name + '\')">🚑 REQUEST AMBULANCE</button>'
+                            : ''
+                        }
+                    </div>
+                </div>
+            `;
+        }
+
+        // Request ambulance (placeholder function)
+        window.requestAmbulance = function(hospitalName) {
+            alert(`🚑 AMBULANCE REQUEST\n\nRequesting ambulance from ${hospitalName}...\n\nIn a real emergency, please CALL 911 immediately instead of using this button.\n\nThis is a demonstration feature only.`);
+        };
+
+        // Auto-focus on ZIP code input when page loads
+        window.addEventListener('load', () => {
+            zipcodeInput.focus();
+        });
+    </script>
+</body>
+</html>

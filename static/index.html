@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HealthSense AI - Your AI-Powered Healthcare Companion. Compare hospitals, book appointments, find emergency services, and explore lab tests.">
+    <meta name="keywords" content="healthcare, AI, hospitals, doctors, emergency services, lab tests, medical appointments">
+    <title>HealthSense AI - AI-Powered Healthcare Platform</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body>
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand">
+            <span class="navbar-brand-icon">🏥</span>
+            HealthSense AI
+        </a>
+
+        <button class="navbar-toggle" id="navbarToggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="navbar-links" id="navbarLinks">
+            <li><a href="hospitals.html">Hospitals</a></li>
+            <li><a href="doctors.html">Doctors</a></li>
+            <li><a href="tests.html">Lab Tests</a></li>
+            <li><a href="chat.html">AI Chat</a></li>
+            <li><a href="emergency.html" class="emergency-link">🚨 Emergency</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Your AI-Powered<br>
+                    <span class="hero-highlight">Healthcare Companion</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Compare hospitals, book appointments, find emergency services,
+                    and explore lab tests - all powered by advanced AI technology.
+                </p>
+                <div class="hero-cta">
+                    <a href="hospitals.html" class="btn btn-primary btn-lg">
+                        Find Hospitals
+                    </a>
+                    <a href="doctors.html" class="btn btn-outline btn-lg">
+                        Book Appointment
+                    </a>
+                    <a href="emergency.html" class="btn btn-emergency">
+                        🚨 Emergency Help
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUICK SEARCH SECTION -->
+    <section class="quick-search">
+        <div class="container">
+            <div class="search-box">
+                <h3 class="search-title">What are you looking for?</h3>
+                <form class="search-form" id="quickSearchForm">
+                    <input
+                        type="text"
+                        class="search-input"
+                        id="quickSearchInput"
+                        placeholder="Try 'Cardiologists near me', 'Diabetes tests', or 'Emergency in 10001'..."
+                        autocomplete="off"
+                    >
+                    <button type="submit" class="btn btn-primary search-btn">
+                        Search
+                    </button>
+                </form>
+                <div class="search-suggestions">
+                    <span class="suggestion-label">Popular searches:</span>
+                    <button class="suggestion-tag" onclick="searchFor('cardiologists')">Cardiologists</button>
+                    <button class="suggestion-tag" onclick="searchFor('diabetes tests')">Diabetes Tests</button>
+                    <button class="suggestion-tag" onclick="searchFor('emergency 10001')">Emergency Services</button>
+                    <button class="suggestion-tag" onclick="searchFor('hospitals boston')">Hospitals in Boston</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="section features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Comprehensive Healthcare Services</h2>
+                <p>Everything you need for better healthcare decisions, all in one platform</p>
+            </div>
+
+            <div class="row">
+                <!-- Hospital Comparison Card -->
+                <div class="col col-3">
+                    <div class="feature-card">
+                        <div class="feature-icon">🏥</div>
+                        <h3 class="feature-title">Hospital Comparison</h3>
+                        <p class="feature-description">
+                            Compare hospitals by location, specialization, ratings, facilities,
+                            and cost to make informed decisions.
+                        </p>
+                        <ul class="feature-list">
+                            <li>Filter by specialty</li>
+                            <li>Compare ratings & reviews</li>
+                            <li>View facilities & services</li>
+                            <li>Cost comparison</li>
+                        </ul>
+                        <a href="hospitals.html" class="btn btn-primary btn-block">
+                            Explore Hospitals
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Doctor Booking Card -->
+                <div class="col col-3">
+                    <div class="feature-card">
+                        <div class="feature-icon">👨‍⚕️</div>
+                        <h3 class="feature-title">Doctor Appointments</h3>
+                        <p class="feature-description">
+                            Find available doctors, check their schedules, and book
+                            appointments instantly - all in one place.
+                        </p>
+                        <ul class="feature-list">
+                            <li>Search by specialization</li>
+                            <li>View doctor profiles</li>
+                            <li>Check availability</li>
+                            <li>Book appointments online</li>
+                        </ul>
+                        <a href="doctors.html" class="btn btn-primary btn-block">
+                            Find Doctors
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Emergency Services Card -->
+                <div class="col col-3">
+                    <div class="feature-card feature-card-emergency">
+                        <div class="feature-icon">🚨</div>
+                        <h3 class="feature-title">Emergency Services</h3>
+                        <p class="feature-description">
+                            Quickly locate the nearest emergency facilities and ambulance
+                            services when every second counts.
+                        </p>
+                        <ul class="feature-list">
+                            <li>Find nearest emergency room</li>
+                            <li>Check ambulance availability</li>
+                            <li>24/7 service information</li>
+                            <li>GPS-based location</li>
+                        </ul>
+                        <a href="emergency.html" class="btn btn-emergency btn-block">
+                            Emergency Help
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Lab Tests Card -->
+                <div class="col col-3">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔬</div>
+                        <h3 class="feature-title">Lab Tests & Diagnostics</h3>
+                        <p class="feature-description">
+                            Browse comprehensive lab test information, compare prices,
+                            and understand what tests you need.
+                        </p>
+                        <ul class="feature-list">
+                            <li>Comprehensive test catalog</li>
+                            <li>Price comparison</li>
+                            <li>Preparation guidelines</li>
+                            <li>Health screening packages</li>
+                        </ul>
+                        <a href="tests.html" class="btn btn-primary btn-block">
+                            Browse Tests
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section class="section how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How HealthSense AI Works</h2>
+                <p>Get started in three simple steps</p>
+            </div>
+
+            <div class="row">
+                <div class="col col-4">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">Search</h3>
+                        <p class="step-description">
+                            Enter your healthcare needs - whether it's finding a hospital,
+                            booking a doctor, or searching for lab tests.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col col-4">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">Compare</h3>
+                        <p class="step-description">
+                            Our AI analyzes and compares options based on location, ratings,
+                            cost, availability, and your specific requirements.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col col-4">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">Book or Connect</h3>
+                        <p class="step-description">
+                            Book appointments directly, get directions to facilities,
+                            or connect with emergency services instantly.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS SECTION -->
+    <section class="section stats">
+        <div class="container">
+            <div class="row">
+                <div class="col col-3">
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Partner Hospitals</div>
+                    </div>
+                </div>
+                <div class="col col-3">
+                    <div class="stat-item">
+                        <div class="stat-number">2,000+</div>
+                        <div class="stat-label">Verified Doctors</div>
+                    </div>
+                </div>
+                <div class="col col-3">
+                    <div class="stat-item">
+                        <div class="stat-number">150+</div>
+                        <div class="stat-label">Lab Test Options</div>
+                    </div>
+                </div>
+                <div class="col col-3">
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Emergency Support</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI CHAT SECTION -->
+    <section class="section ai-chat-section">
+        <div class="container">
+            <div class="ai-chat-banner">
+                <div class="ai-chat-content">
+                    <h2>Have a Health Question?</h2>
+                    <p>Chat with our AI assistant for personalized healthcare guidance, 24/7.</p>
+                    <a href="chat.html" class="btn btn-primary btn-lg">
+                        Chat with AI Assistant
+                    </a>
+                </div>
+                <div class="ai-chat-illustration">
+                    💬
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>HealthSense AI</h4>
+                    <p>Your trusted AI-powered healthcare companion, helping you make better healthcare decisions.</p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="hospitals.html">Find Hospitals</a></li>
+                        <li><a href="doctors.html">Book Doctors</a></li>
+                        <li><a href="tests.html">Lab Tests</a></li>
+                        <li><a href="emergency.html">Emergency Services</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="chat.html">AI Chat Assistant</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li>📧 support@healthsense.ai</li>
+                        <li>📞 1-800-HEALTH-AI</li>
+                        <li>🚨 Emergency: 911</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 HealthSense AI. All rights reserved. | Powered by Advanced AI Technology</p>
+                <p class="disclaimer">⚠️ For medical emergencies, always call 911. This platform provides information only and does not replace professional medical advice.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom CSS for Home Page -->
+    <style>
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-highlight {
+            color: var(--primary-teal);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Quick Search */
+        .quick-search {
+            background-color: white;
+            padding: 3rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-top: -30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-box {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .search-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: var(--radius-md);
+            transition: var(--transition-fast);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+            box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.1);
+        }
+
+        .search-btn {
+            padding: 1rem 2rem;
+            white-space: nowrap;
+        }
+
+        .search-suggestions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .suggestion-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .suggestion-tag {
+            background-color: var(--bg-light-gray);
+            border: 1px solid #ddd;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .suggestion-tag:hover {
+            background-color: var(--primary-teal);
+            color: white;
+            border-color: var(--primary-teal);
+        }
+
+        /* Features Section */
+        .features {
+            background-color: var(--bg-main);
+        }
+
+        .feature-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition-normal);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .feature-card-emergency {
+            border: 3px solid var(--emergency-red);
+        }
+
+        .feature-card-emergency:hover {
+            box-shadow: 0 8px 30px rgba(211, 47, 47, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .feature-description {
+            color: var(--text-medium);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            color: var(--text-medium);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            color: var(--primary-teal);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background-color: white;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-teal), var(--primary-teal-dark));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .step-description {
+            color: var(--text-medium);
+            line-height: 1.8;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: linear-gradient(135deg, var(--primary-teal), var(--primary-teal-dark));
+            color: white;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* AI Chat Banner */
+        .ai-chat-section {
+            background-color: var(--bg-main);
+        }
+
+        .ai-chat-banner {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .ai-chat-content h2 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .ai-chat-content p {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 1.5rem;
+        }
+
+        .ai-chat-illustration {
+            font-size: 8rem;
+            opacity: 0.3;
+        }
+
+        /* Footer Disclaimer */
+        .disclaimer {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            opacity: 0.7;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-cta .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .ai-chat-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .ai-chat-illustration {
+                font-size: 5rem;
+                margin-top: 2rem;
+            }
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile Navigation Toggle
+        const navbarToggle = document.getElementById('navbarToggle');
+        const navbarLinks = document.getElementById('navbarLinks');
+
+        navbarToggle.addEventListener('click', () => {
+            navbarLinks.classList.toggle('active');
+        });
+
+        // Quick Search Form Handler
+        const quickSearchForm = document.getElementById('quickSearchForm');
+        const quickSearchInput = document.getElementById('quickSearchInput');
+
+        quickSearchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const query = quickSearchInput.value.trim().toLowerCase();
+
+            if (!query) {
+                alert('Please enter a search query');
+                return;
+            }
+
+            // Smart routing based on query
+            if (query.includes('emergency') || query.includes('ambulance') || /\d{5}/.test(query)) {
+                window.location.href = `emergency.html?q=${encodeURIComponent(query)}`;
+            } else if (query.includes('doctor') || query.includes('appointment') || query.includes('cardiologist') || query.includes('dermatologist')) {
+                window.location.href = `doctors.html?q=${encodeURIComponent(query)}`;
+            } else if (query.includes('test') || query.includes('lab') || query.includes('diabetes') || query.includes('blood')) {
+                window.location.href = `tests.html?q=${encodeURIComponent(query)}`;
+            } else if (query.includes('hospital')) {
+                window.location.href = `hospitals.html?q=${encodeURIComponent(query)}`;
+            } else {
+                // Default to chat for general queries
+                window.location.href = `chat.html?q=${encodeURIComponent(query)}`;
+            }
+        });
+
+        // Search Suggestion Tags
+        function searchFor(suggestion) {
+            quickSearchInput.value = suggestion;
+            quickSearchForm.dispatchEvent(new Event('submit'));
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Compare hospitals by ratings, specialties, facilities, and costs. Find the best hospital for your needs.">
+    <meta name="keywords" content="hospital comparison, hospital ratings, medical facilities, healthcare">
+    <title>🏥 Hospital Comparison - HealthSense AI</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/main.css">
+
+    <style>
+        /* Hospital Comparison Page Styles */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-dark) 100%);
+            color: white;
+            padding: 3rem 1rem 2rem;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.125rem;
+            opacity: 0.95;
+        }
+
+        .search-filter-section {
+            background-color: white;
+            padding: 2rem 1rem;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 60px;
+            z-index: 100;
+        }
+
+        .search-filter-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-bar-wrapper {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input-large {
+            flex: 1;
+            min-width: 300px;
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            transition: var(--transition-normal);
+        }
+
+        .search-input-large:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+            box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.1);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.375rem;
+            color: var(--text-dark);
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 0.625rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            background-color: white;
+            cursor: pointer;
+            transition: var(--transition-normal);
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .results-section {
+            padding: 2rem 1rem;
+            background-color: var(--bg-light);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .results-count {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border-color);
+            background-color: white;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            font-weight: 500;
+        }
+
+        .view-btn.active {
+            background-color: var(--primary-teal);
+            color: white;
+            border-color: var(--primary-teal);
+        }
+
+        .view-btn:hover:not(.active) {
+            border-color: var(--primary-teal);
+        }
+
+        .comparison-bar {
+            background-color: var(--primary-teal);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-md);
+        }
+
+        .comparison-bar.active {
+            display: flex;
+        }
+
+        .comparison-info {
+            font-weight: 600;
+        }
+
+        .comparison-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Table View */
+        .table-container {
+            background-color: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow-x: auto;
+        }
+
+        .hospital-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .hospital-table thead {
+            background-color: var(--primary-teal);
+            color: white;
+        }
+
+        .hospital-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .hospital-table th:hover {
+            background-color: var(--primary-teal-dark);
+        }
+
+        .hospital-table th .sort-icon {
+            margin-left: 0.25rem;
+            font-size: 0.75rem;
+        }
+
+        .hospital-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hospital-table tbody tr:hover {
+            background-color: var(--bg-light);
+        }
+
+        .hospital-name-cell {
+            font-weight: 600;
+            color: var(--primary-teal);
+            cursor: pointer;
+        }
+
+        .hospital-name-cell:hover {
+            text-decoration: underline;
+        }
+
+        .rating-display {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stars {
+            color: #f39c12;
+            font-size: 1rem;
+        }
+
+        .rating-number {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-left: 0.25rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-success {
+            background-color: #e8f5e9;
+            color: #27ae60;
+        }
+
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #f39c12;
+        }
+
+        .badge-info {
+            background-color: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .specialty-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .compare-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Card View */
+        .hospital-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            display: none;
+        }
+
+        .hospital-grid.active {
+            display: grid;
+        }
+
+        .hospital-card {
+            background-color: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-normal);
+            border-left: 5px solid var(--primary-teal);
+        }
+
+        .hospital-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .card-compare {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-info-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .card-icon {
+            margin-right: 0.5rem;
+            width: 20px;
+        }
+
+        .card-specialties {
+            margin: 1rem 0;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Comparison Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--radius-lg);
+            max-width: 1200px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            margin: 2rem;
+        }
+
+        .modal-header {
+            background-color: var(--primary-teal);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background-color: var(--bg-light);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table tr:hover {
+            background-color: var(--bg-light);
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .search-bar-wrapper {
+                flex-direction: column;
+            }
+
+            .search-input-large {
+                min-width: 100%;
+            }
+
+            .filter-group {
+                min-width: 100%;
+            }
+
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .table-container {
+                overflow-x: scroll;
+            }
+
+            .hospital-table th,
+            .hospital-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            .hospital-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-bar {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .modal-content {
+                width: 100%;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand">
+            <span class="navbar-brand-icon">🏥</span>
+            HealthSense AI
+        </a>
+
+        <button class="navbar-toggle" id="navbarToggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="navbar-links" id="navbarLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="hospitals.html" class="active">Hospitals</a></li>
+            <li><a href="doctors.html">Doctors</a></li>
+            <li><a href="tests.html">Lab Tests</a></li>
+            <li><a href="chat.html">AI Chat</a></li>
+            <li><a href="emergency.html" class="emergency-link">🚨 Emergency</a></li>
+        </ul>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">🏥 Hospital Comparison</h1>
+            <p class="page-subtitle">
+                Compare hospitals by ratings, specialties, facilities, and costs to find the best care for your needs
+            </p>
+        </div>
+    </section>
+
+    <!-- Search & Filters -->
+    <section class="search-filter-section">
+        <div class="search-filter-container">
+            <div class="search-bar-wrapper">
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input-large"
+                    placeholder="Search by hospital name, location, or specialty..."
+                    autocomplete="off"
+                >
+                <button class="btn btn-primary" id="searchBtn">
+                    🔍 Search
+                </button>
+            </div>
+
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="filter-label" for="specialtyFilter">Specialty</label>
+                    <select id="specialtyFilter" class="filter-select">
+                        <option value="">All Specialties</option>
+                        <option value="cardiology">Cardiology</option>
+                        <option value="neurology">Neurology</option>
+                        <option value="orthopedics">Orthopedics</option>
+                        <option value="oncology">Oncology</option>
+                        <option value="pediatrics">Pediatrics</option>
+                        <option value="maternity">Maternity</option>
+                        <option value="emergency">Emergency Care</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="ratingFilter">Minimum Rating</label>
+                    <select id="ratingFilter" class="filter-select">
+                        <option value="">Any Rating</option>
+                        <option value="4.5">4.5+ Stars</option>
+                        <option value="4.0">4.0+ Stars</option>
+                        <option value="3.5">3.5+ Stars</option>
+                        <option value="3.0">3.0+ Stars</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="bedsFilter">Hospital Size</label>
+                    <select id="bedsFilter" class="filter-select">
+                        <option value="">Any Size</option>
+                        <option value="large">Large (500+ beds)</option>
+                        <option value="medium">Medium (200-500 beds)</option>
+                        <option value="small">Small (<200 beds)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="locationFilter">Location</label>
+                    <select id="locationFilter" class="filter-select">
+                        <option value="">All Locations</option>
+                        <option value="manhattan">Manhattan</option>
+                        <option value="brooklyn">Brooklyn</option>
+                        <option value="queens">Queens</option>
+                        <option value="bronx">Bronx</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-buttons">
+                <button class="btn btn-primary" id="applyFiltersBtn">Apply Filters</button>
+                <button class="btn btn-outline" id="resetFiltersBtn">Reset</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Bar (Hidden by default) -->
+    <div class="container">
+        <div class="comparison-bar" id="comparisonBar">
+            <div class="comparison-info">
+                <span id="comparisonCount">0</span> hospitals selected for comparison
+            </div>
+            <div class="comparison-actions">
+                <button class="btn btn-secondary" id="compareBtn">Compare Selected</button>
+                <button class="btn btn-outline" id="clearComparisonBtn">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <section class="results-section">
+        <div class="container">
+            <div class="results-header">
+                <div class="results-count" id="resultsCount">
+                    Loading hospitals...
+                </div>
+                <div class="view-toggle">
+                    <button class="view-btn active" id="tableViewBtn" data-view="table">
+                        📊 Table View
+                    </button>
+                    <button class="view-btn" id="cardViewBtn" data-view="card">
+                        🗂️ Card View
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table View -->
+            <div class="table-container" id="tableView">
+                <table class="hospital-table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAllCheckbox"></th>
+                            <th data-sort="name">Hospital Name <span class="sort-icon">⬍</span></th>
+                            <th data-sort="rating">Rating <span class="sort-icon">⬍</span></th>
+                            <th data-sort="beds">Beds <span class="sort-icon">⬍</span></th>
+                            <th data-sort="distance">Distance <span class="sort-icon">⬍</span></th>
+                            <th>Specialties</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hospitalTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Card View -->
+            <div class="hospital-grid" id="cardView">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Modal -->
+    <div class="modal" id="comparisonModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Hospital Comparison</h2>
+                <button class="modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body" id="comparisonModalBody">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">About HealthSense AI</h3>
+                    <p class="footer-text">
+                        Your trusted AI-powered healthcare companion for finding hospitals,
+                        doctors, lab tests, and emergency services.
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="hospitals.html">Hospital Comparison</a></li>
+                        <li><a href="doctors.html">Find Doctors</a></li>
+                        <li><a href="tests.html">Lab Tests</a></li>
+                        <li><a href="chat.html">AI Chat Assistant</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="chat.html">AI Health Assistant</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Emergency Contact</h3>
+                    <ul class="footer-links">
+                        <li><a href="tel:911" style="color: var(--emergency-red); font-weight: 600;">🚨 Call 911 (Emergency)</a></li>
+                        <li><a href="mailto:support@healthsense.ai">📧 support@healthsense.ai</a></li>
+                        <li>📞 1-800-HEALTH-AI</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 HealthSense AI. All rights reserved.</p>
+                <p class="footer-disclaimer">
+                    <strong>Medical Disclaimer:</strong> For life-threatening emergencies, always call 911 immediately.
+                    This platform provides informational services only and is not a substitute for professional medical advice.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile Navigation Toggle
+        const navbarToggle = document.getElementById('navbarToggle');
+        const navbarLinks = document.getElementById('navbarLinks');
+
+        if (navbarToggle) {
+            navbarToggle.addEventListener('click', () => {
+                navbarLinks.classList.toggle('active');
+            });
+        }
+
+        // Mock Hospital Data
+        const mockHospitals = [
+            {
+                id: 1,
+                name: "NewYork-Presbyterian Hospital",
+                rating: 4.8,
+                beds: 2455,
+                distance: 1.2,
+                location: "Manhattan",
+                address: "525 E 68th St, New York, NY 10065",
+                phone: "(212) 746-5454",
+                specialties: ["Cardiology", "Neurology", "Oncology", "Pediatrics"],
+                emergencyRoom: true,
+                cost: "$$$$"
+            },
+            {
+                id: 2,
+                name: "Mount Sinai Hospital",
+                rating: 4.7,
+                beds: 1134,
+                distance: 0.8,
+                location: "Manhattan",
+                address: "1 Gustave L. Levy Place, New York, NY 10029",
+                phone: "(212) 241-6500",
+                specialties: ["Cardiology", "Orthopedics", "Maternity", "Emergency"],
+                emergencyRoom: true,
+                cost: "$$$"
+            },
+            {
+                id: 3,
+                name: "NYU Langone Health",
+                rating: 4.9,
+                beds: 1210,
+                distance: 2.3,
+                location: "Manhattan",
+                address: "550 1st Ave, New York, NY 10016",
+                phone: "(212) 263-7300",
+                specialties: ["Oncology", "Neurology", "Cardiology", "Pediatrics"],
+                emergencyRoom: true,
+                cost: "$$$$"
+            },
+            {
+                id: 4,
+                name: "Lenox Hill Hospital",
+                rating: 4.5,
+                beds: 652,
+                distance: 1.8,
+                location: "Manhattan",
+                address: "100 E 77th St, New York, NY 10075",
+                phone: "(212) 434-2000",
+                specialties: ["Cardiology", "Orthopedics", "Maternity"],
+                emergencyRoom: true,
+                cost: "$$$"
+            },
+            {
+                id: 5,
+                name: "Brooklyn Hospital Center",
+                rating: 4.2,
+                beds: 464,
+                distance: 5.5,
+                location: "Brooklyn",
+                address: "121 DeKalb Ave, Brooklyn, NY 11201",
+                phone: "(718) 250-8000",
+                specialties: ["Emergency", "Pediatrics", "Maternity"],
+                emergencyRoom: true,
+                cost: "$$"
+            },
+            {
+                id: 6,
+                name: "Queens Hospital Center",
+                rating: 4.0,
+                beds: 375,
+                distance: 7.2,
+                location: "Queens",
+                address: "82-68 164th St, Queens, NY 11432",
+                phone: "(718) 883-3000",
+                specialties: ["Emergency", "Cardiology", "Neurology"],
+                emergencyRoom: true,
+                cost: "$$"
+            },
+            {
+                id: 7,
+                name: "Montefiore Medical Center",
+                rating: 4.6,
+                beds: 1491,
+                distance: 9.8,
+                location: "Bronx",
+                address: "111 E 210th St, Bronx, NY 10467",
+                phone: "(718) 920-4321",
+                specialties: ["Cardiology", "Oncology", "Pediatrics", "Neurology"],
+                emergencyRoom: true,
+                cost: "$$$"
+            },
+            {
+                id: 8,
+                name: "Maimonides Medical Center",
+                rating: 4.4,
+                beds: 711,
+                distance: 6.1,
+                location: "Brooklyn",
+                address: "4802 10th Ave, Brooklyn, NY 11219",
+                phone: "(718) 283-6000",
+                specialties: ["Cardiology", "Maternity", "Orthopedics"],
+                emergencyRoom: true,
+                cost: "$$"
+            }
+        ];
+
+        // State Management
+        let hospitals = [...mockHospitals];
+        let filteredHospitals = [...mockHospitals];
+        let selectedHospitals = new Set();
+        let currentView = 'table';
+        let sortColumn = null;
+        let sortDirection = 'asc';
+
+        // DOM Elements
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const specialtyFilter = document.getElementById('specialtyFilter');
+        const ratingFilter = document.getElementById('ratingFilter');
+        const bedsFilter = document.getElementById('bedsFilter');
+        const locationFilter = document.getElementById('locationFilter');
+        const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+        const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+        const resultsCount = document.getElementById('resultsCount');
+        const tableViewBtn = document.getElementById('tableViewBtn');
+        const cardViewBtn = document.getElementById('cardViewBtn');
+        const tableView = document.getElementById('tableView');
+        const cardView = document.getElementById('cardView');
+        const hospitalTableBody = document.getElementById('hospitalTableBody');
+        const comparisonBar = document.getElementById('comparisonBar');
+        const comparisonCount = document.getElementById('comparisonCount');
+        const compareBtn = document.getElementById('compareBtn');
+        const clearComparisonBtn = document.getElementById('clearComparisonBtn');
+        const comparisonModal = document.getElementById('comparisonModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const comparisonModalBody = document.getElementById('comparisonModalBody');
+        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+
+        // Initialize
+        function init() {
+            // Check for URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+            if (query) {
+                searchInput.value = query;
+            }
+
+            renderHospitals();
+            attachEventListeners();
+        }
+
+        // Render Hospitals
+        function renderHospitals() {
+            if (currentView === 'table') {
+                renderTableView();
+            } else {
+                renderCardView();
+            }
+            updateResultsCount();
+        }
+
+        // Render Table View
+        function renderTableView() {
+            hospitalTableBody.innerHTML = filteredHospitals.map(hospital => `
+                <tr>
+                    <td>
+                        <input
+                            type="checkbox"
+                            class="compare-checkbox"
+                            data-hospital-id="${hospital.id}"
+                            ${selectedHospitals.has(hospital.id) ? 'checked' : ''}
+                        >
+                    </td>
+                    <td>
+                        <div class="hospital-name-cell" onclick="showHospitalDetails(${hospital.id})">
+                            ${hospital.name}
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">
+                            ${hospital.address}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="rating-display">
+                            <span class="stars">${'★'.repeat(Math.floor(hospital.rating))}${'☆'.repeat(5 - Math.floor(hospital.rating))}</span>
+                            <span class="rating-number">${hospital.rating}</span>
+                        </div>
+                    </td>
+                    <td>${hospital.beds}</td>
+                    <td>${hospital.distance} mi</td>
+                    <td>
+                        <div class="specialty-tags">
+                            ${hospital.specialties.slice(0, 2).map(spec =>
+                                `<span class="badge badge-info">${spec}</span>`
+                            ).join('')}
+                            ${hospital.specialties.length > 2 ? `<span class="badge badge-warning">+${hospital.specialties.length - 2}</span>` : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="showHospitalDetails(${hospital.id})">
+                            View Details
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Render Card View
+        function renderCardView() {
+            cardView.innerHTML = filteredHospitals.map(hospital => `
+                <div class="hospital-card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">${hospital.name}</h3>
+                            <div class="rating-display">
+                                <span class="stars">${'★'.repeat(Math.floor(hospital.rating))}${'☆'.repeat(5 - Math.floor(hospital.rating))}</span>
+                                <span class="rating-number">${hospital.rating}</span>
+                            </div>
+                        </div>
+                        <div class="card-compare">
+                            <input
+                                type="checkbox"
+                                class="compare-checkbox"
+                                data-hospital-id="${hospital.id}"
+                                ${selectedHospitals.has(hospital.id) ? 'checked' : ''}
+                            >
+                        </div>
+                    </div>
+
+                    <div class="card-info-row">
+                        <span class="card-icon">📍</span>
+                        ${hospital.address}
+                    </div>
+
+                    <div class="card-info-row">
+                        <span class="card-icon">📞</span>
+                        ${hospital.phone}
+                    </div>
+
+                    <div class="card-info-row">
+                        <span class="card-icon">🏥</span>
+                        ${hospital.beds} beds • ${hospital.distance} miles away
+                    </div>
+
+                    <div class="card-specialties">
+                        ${hospital.specialties.map(spec =>
+                            `<span class="badge badge-info">${spec}</span>`
+                        ).join(' ')}
+                    </div>
+
+                    ${hospital.emergencyRoom ? '<span class="badge badge-success">✅ Emergency Room</span>' : ''}
+
+                    <div class="card-actions">
+                        <button class="btn btn-sm btn-primary" onclick="showHospitalDetails(${hospital.id})">
+                            View Details
+                        </button>
+                        <button class="btn btn-sm btn-outline" onclick="window.location.href='tel:${hospital.phone.replace(/[^0-9]/g, '')}'">
+                            📞 Call
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update Results Count
+        function updateResultsCount() {
+            resultsCount.textContent = `${filteredHospitals.length} hospital${filteredHospitals.length !== 1 ? 's' : ''} found`;
+        }
+
+        // Apply Filters
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const specialty = specialtyFilter.value.toLowerCase();
+            const minRating = parseFloat(ratingFilter.value) || 0;
+            const bedSize = bedsFilter.value;
+            const location = locationFilter.value.toLowerCase();
+
+            filteredHospitals = hospitals.filter(hospital => {
+                // Search filter
+                const matchesSearch = !searchTerm ||
+                    hospital.name.toLowerCase().includes(searchTerm) ||
+                    hospital.address.toLowerCase().includes(searchTerm) ||
+                    hospital.specialties.some(s => s.toLowerCase().includes(searchTerm));
+
+                // Specialty filter
+                const matchesSpecialty = !specialty ||
+                    hospital.specialties.some(s => s.toLowerCase().includes(specialty));
+
+                // Rating filter
+                const matchesRating = hospital.rating >= minRating;
+
+                // Bed size filter
+                let matchesBeds = true;
+                if (bedSize === 'large') matchesBeds = hospital.beds >= 500;
+                else if (bedSize === 'medium') matchesBeds = hospital.beds >= 200 && hospital.beds < 500;
+                else if (bedSize === 'small') matchesBeds = hospital.beds < 200;
+
+                // Location filter
+                const matchesLocation = !location || hospital.location.toLowerCase() === location;
+
+                return matchesSearch && matchesSpecialty && matchesRating && matchesBeds && matchesLocation;
+            });
+
+            renderHospitals();
+        }
+
+        // Reset Filters
+        function resetFilters() {
+            searchInput.value = '';
+            specialtyFilter.value = '';
+            ratingFilter.value = '';
+            bedsFilter.value = '';
+            locationFilter.value = '';
+            filteredHospitals = [...hospitals];
+            renderHospitals();
+        }
+
+        // Toggle View
+        function toggleView(view) {
+            currentView = view;
+
+            if (view === 'table') {
+                tableView.style.display = 'block';
+                cardView.classList.remove('active');
+                tableViewBtn.classList.add('active');
+                cardViewBtn.classList.remove('active');
+            } else {
+                tableView.style.display = 'none';
+                cardView.classList.add('active');
+                tableViewBtn.classList.remove('active');
+                cardViewBtn.classList.add('active');
+            }
+
+            renderHospitals();
+        }
+
+        // Handle Comparison Selection
+        function handleComparisonSelection(hospitalId, isChecked) {
+            if (isChecked) {
+                selectedHospitals.add(hospitalId);
+            } else {
+                selectedHospitals.delete(hospitalId);
+            }
+
+            updateComparisonBar();
+        }
+
+        // Update Comparison Bar
+        function updateComparisonBar() {
+            comparisonCount.textContent = selectedHospitals.size;
+
+            if (selectedHospitals.size > 0) {
+                comparisonBar.classList.add('active');
+            } else {
+                comparisonBar.classList.remove('active');
+            }
+        }
+
+        // Clear Comparison
+        function clearComparison() {
+            selectedHospitals.clear();
+            document.querySelectorAll('.compare-checkbox').forEach(cb => cb.checked = false);
+            updateComparisonBar();
+        }
+
+        // Show Comparison Modal
+        function showComparison() {
+            if (selectedHospitals.size < 2) {
+                alert('Please select at least 2 hospitals to compare');
+                return;
+            }
+
+            const selectedHospitalData = hospitals.filter(h => selectedHospitals.has(h.id));
+
+            comparisonModalBody.innerHTML = `
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            ${selectedHospitalData.map(h => `<th>${h.name}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Rating</strong></td>
+                            ${selectedHospitalData.map(h => `<td>${'★'.repeat(Math.floor(h.rating))} ${h.rating}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td><strong>Beds</strong></td>
+                            ${selectedHospitalData.map(h => `<td>${h.beds}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td><strong>Distance</strong></td>
+                            ${selectedHospitalData.map(h => `<td>${h.distance} miles</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td><strong>Location</strong></td>
+                            ${selectedHospitalData.map(h => `<td>${h.location}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td><strong>Cost Level</strong></td>
+                            ${selectedHospitalData.map(h => `<td>${h.cost}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td><strong>Emergency Room</strong></td>
+                            ${selectedHospitalData.map(h => `<td>${h.emergencyRoom ? '✅ Yes' : '❌ No'}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td><strong>Specialties</strong></td>
+                            ${selectedHospitalData.map(h => `<td>${h.specialties.join(', ')}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td><strong>Phone</strong></td>
+                            ${selectedHospitalData.map(h => `<td><a href="tel:${h.phone.replace(/[^0-9]/g, '')}">${h.phone}</a></td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td><strong>Address</strong></td>
+                            ${selectedHospitalData.map(h => `<td>${h.address}</td>`).join('')}
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+
+            comparisonModal.classList.add('active');
+        }
+
+        // Show Hospital Details (Placeholder)
+        window.showHospitalDetails = function(hospitalId) {
+            const hospital = hospitals.find(h => h.id === hospitalId);
+            if (hospital) {
+                alert(`Hospital Details:\n\n${hospital.name}\n${hospital.address}\nRating: ${hospital.rating}/5\nBeds: ${hospital.beds}\nSpecialties: ${hospital.specialties.join(', ')}\n\nIn a full implementation, this would show a detailed modal with comprehensive hospital information, reviews, photos, and booking options.`);
+            }
+        };
+
+        // Sort Table
+        function sortTable(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
+            }
+
+            filteredHospitals.sort((a, b) => {
+                let aVal = a[column];
+                let bVal = b[column];
+
+                if (typeof aVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+
+                if (sortDirection === 'asc') {
+                    return aVal > bVal ? 1 : -1;
+                } else {
+                    return aVal < bVal ? 1 : -1;
+                }
+            });
+
+            // Update sort icons
+            document.querySelectorAll('.hospital-table th .sort-icon').forEach(icon => {
+                icon.textContent = '⬍';
+            });
+
+            const th = document.querySelector(`th[data-sort="${column}"]`);
+            if (th) {
+                th.querySelector('.sort-icon').textContent = sortDirection === 'asc' ? '▲' : '▼';
+            }
+
+            renderHospitals();
+        }
+
+        // Event Listeners
+        function attachEventListeners() {
+            searchBtn.addEventListener('click', applyFilters);
+            searchInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') applyFilters();
+            });
+            applyFiltersBtn.addEventListener('click', applyFilters);
+            resetFiltersBtn.addEventListener('click', resetFilters);
+            tableViewBtn.addEventListener('click', () => toggleView('table'));
+            cardViewBtn.addEventListener('click', () => toggleView('card'));
+            compareBtn.addEventListener('click', showComparison);
+            clearComparisonBtn.addEventListener('click', clearComparison);
+            closeModalBtn.addEventListener('click', () => comparisonModal.classList.remove('active'));
+
+            // Close modal on outside click
+            comparisonModal.addEventListener('click', (e) => {
+                if (e.target === comparisonModal) {
+                    comparisonModal.classList.remove('active');
+                }
+            });
+
+            // Checkbox delegation
+            document.addEventListener('change', (e) => {
+                if (e.target.classList.contains('compare-checkbox')) {
+                    const hospitalId = parseInt(e.target.dataset.hospitalId);
+                    handleComparisonSelection(hospitalId, e.target.checked);
+                }
+            });
+
+            // Select all checkbox
+            selectAllCheckbox.addEventListener('change', (e) => {
+                const checkboxes = document.querySelectorAll('.compare-checkbox');
+                checkboxes.forEach(cb => {
+                    cb.checked = e.target.checked;
+                    const hospitalId = parseInt(cb.dataset.hospitalId);
+                    handleComparisonSelection(hospitalId, e.target.checked);
+                });
+            });
+
+            // Table sorting
+            document.querySelectorAll('.hospital-table th[data-sort]').forEach(th => {
+                th.addEventListener('click', () => {
+                    sortTable(th.dataset.sort);
+                });
+            });
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
