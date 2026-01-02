@@ -1,7 +1,7 @@
 # 🚀 HealthSense AI - Quick Start Guide
 
 ##  🏆 Quantifiable Achievements to Highlight.
-  Use these numbers in your resume:
+  
   - ✅ 4 specialized autonomous agents with intelligent orchestration
   - ✅ 95%+ intent classification accuracy in agent routing
   - ✅ 97.9% overall system success rate
